@@ -1,4 +1,4 @@
-# Static Gutenberg
+# Standalone Gutenberg
 
 Workspace to try and play with Gutenberg as a standalone editor independent from any WordPress context
 
@@ -7,3 +7,5 @@ Workspace to try and play with Gutenberg as a standalone editor independent from
 * `npm install && npm start`
 
 ## Demo
+
+http://gutenberg-standalone.surge.sh/
