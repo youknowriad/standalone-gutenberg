@@ -1,0 +1,667 @@
+// Styles copied from Gutenberg edit-post (better to adapt them)
+
+$admin-bar-height: 0;
+$admin-bar-height-big: 0;
+
+// main.scss
+// Output overrides for each scheme
+@include admin-scheme-color-overrides("blue", $scheme-blue__spot-color);
+@include admin-scheme-color-overrides("coffee", $scheme-coffee__spot-color);
+@include admin-scheme-color-overrides(
+  "ectoplasm",
+  $scheme-ectoplasm__spot-color
+);
+@include admin-scheme-color-overrides("midnight", $scheme-midnight__spot-color);
+@include admin-scheme-color-overrides("ocean", $scheme-ocean__spot-color);
+@include admin-scheme-color-overrides("sunrise", $scheme-sunrise__spot-color);
+
+@keyframes animate_fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes move_background {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 28px 0;
+  }
+}
+
+@keyframes loading_fade {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes slide_in_right {
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+body {
+  background: $white;
+
+  .a11y-speak-region {
+    left: -1px;
+    top: -1px;
+  }
+
+  svg {
+    fill: currentColor;
+    outline: none;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  ul:not(.wp-block-gallery) {
+    list-style-type: disc;
+  }
+
+  ol:not(.wp-block-gallery) {
+    list-style-type: decimal;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding: 0;
+  }
+
+  select {
+    font-size: $default-font-size;
+    color: $dark-gray-500;
+  }
+}
+
+.gutenberg__editor {
+  // on mobile the main content area has to scroll
+  // otherwise you can invoke the overscroll bounce on the non-scrolling container, causing (ノಠ益ಠ)ノ彡┻━┻
+  @include break-small {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    min-height: calc(100vh - #{$admin-bar-height-big});
+  }
+
+  // The WP header height changes at this breakpoint
+  @include break-medium {
+    min-height: calc(100vh - #{$admin-bar-height});
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  iframe {
+    width: 100%;
+  }
+
+  .components-navigate-regions {
+    height: 100%;
+  }
+}
+
+.editor-post-title,
+.editor-block-list__block {
+  input,
+  textarea {
+    border-radius: 4px;
+    border-color: $light-gray-500;
+    font-family: $default-font;
+    font-size: $default-font-size;
+    padding: 6px 10px;
+
+    &::-webkit-input-placeholder {
+      color: $dark-gray-300;
+    }
+    &::-moz-placeholder {
+      color: $dark-gray-300;
+    }
+    &:-ms-input-placeholder {
+      color: $dark-gray-300;
+    }
+    &:-moz-placeholder {
+      color: $dark-gray-300;
+    }
+  }
+}
+
+// layout
+.edit-post-layout,
+.edit-post-layout__content {
+  height: 100%;
+}
+
+.edit-post-layout {
+  position: relative;
+
+  .components-notice-list {
+    position: sticky;
+    top: $header-height;
+    left: 0;
+    right: 0;
+
+    @include break-small {
+      position: fixed;
+      top: inherit;
+    }
+
+    .notice {
+      margin: 0 0 5px;
+      padding: 6px 12px;
+      min-height: $panel-header-height;
+
+      .notice-dismiss {
+        margin: 5px;
+      }
+    }
+  }
+
+  // on mobile, toolbars behave differently
+  @include break-small {
+    padding-top: $header-height;
+  }
+
+  &.has-fixed-toolbar {
+    .edit-post-layout__content {
+      padding-top: $block-controls-height;
+    }
+
+    // on mobile, toolbars behave differently
+    @include break-small {
+      padding-top: $header-height + $block-toolbar-height;
+
+      .edit-post-layout__content {
+        padding-top: 0;
+      }
+    }
+
+    @include break-large {
+      padding-top: $header-height;
+    }
+  }
+}
+
+@include editor-left(".components-notice-list");
+@include editor-right(".components-notice-list");
+
+.edit-post-layout__metaboxes:not(:empty) {
+  border-top: 1px solid $light-gray-500;
+  margin-top: 10px;
+  padding: 10px 0 10px;
+  clear: both;
+
+  .edit-post-meta-boxes-area {
+    max-width: $visual-editor-max-width;
+    margin: auto;
+  }
+}
+
+.edit-post-layout__content {
+  position: relative;
+
+  // on mobile the main content area has to scroll
+  // otherwise you can invoke the overscroll bounce on the non-scrolling container, causing (ノಠ益ಠ)ノ彡┻━┻
+  @include break-small {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.edit-post-layout .editor-post-publish-panel {
+  position: fixed;
+  z-index: z-index(".edit-post-layout .edit-post-post-publish-panel");
+  top: $admin-bar-height-big;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  overflow: auto;
+
+  @include break-medium() {
+    top: $admin-bar-height;
+    left: auto;
+    width: $sidebar-width;
+    border-left: 1px solid $light-gray-500;
+    @include slide_in_right;
+  }
+}
+
+.edit-post-layout .editor-post-publish-panel__header-publish-button {
+  margin-right: 52px; // This number is approximative to keep the publish button at the same position when opening the panel
+}
+
+// visual editor
+
+.edit-post-visual-editor {
+  position: relative;
+  height: 100%;
+  margin: 0 auto;
+  padding: 50px 0;
+
+  &,
+  & p {
+    font-family: $editor-font;
+    font-size: $editor-font-size;
+    line-height: $editor-line-height;
+  }
+}
+
+.edit-post-visual-editor .editor-block-list__block {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $visual-editor-max-width + (2 * $block-mover-padding-visible);
+
+  &[data-align="wide"] {
+    max-width: 1100px;
+  }
+
+  &[data-align="full"] {
+    max-width: 100%;
+  }
+
+  &[data-align="full"],
+  &[data-align="wide"] {
+    .editor-block-contextual-toolbar {
+      @include break-small() {
+        width: $visual-editor-max-width + 2; // 1px border left and right
+      }
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+}
+
+// This is a focus style shown for blocks that need an indicator even when in an isEditing state
+// like for example an image block that receives arrowkey focus.
+.edit-post-visual-editor
+  .editor-block-list__block:not(.is-selected)
+  .editor-block-list__block-edit {
+  box-shadow: 0 0 0 0 $white, 0 0 0 0 $dark-gray-900;
+  transition: 0.1s box-shadow 0.05s;
+
+  &:focus {
+    box-shadow: 0 0 0 1px $white, 0 0 0 3px $dark-gray-900;
+  }
+}
+
+.edit-post-visual-editor .editor-post-title {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: $visual-editor-max-width + (2 * $block-mover-padding-visible);
+
+  .editor-post-permalink {
+    left: $block-padding;
+    right: $block-padding;
+  }
+
+  @include break-small() {
+    padding: 5px #{$block-mover-padding-visible - 1px}; // subtract 1px border, because this is an outline
+
+    .editor-post-permalink {
+      left: $block-mover-padding-visible;
+      right: $block-mover-padding-visible;
+    }
+  }
+}
+
+.edit-post-visual-editor .editor-default-block-appender {
+  max-width: $visual-editor-max-width + (2 * $block-mover-padding-visible);
+  clear: left;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+
+  @include break-small() {
+    padding: 0 $block-mover-padding-visible; // don't subtract 1px border because it's a border not an outline
+
+    .components-drop-zone {
+      left: $block-mover-padding-visible;
+      right: $block-mover-padding-visible;
+    }
+
+    .editor-default-block-appender__content {
+      padding: 0 $block-padding;
+    }
+  }
+}
+
+.edit-post-visual-editor
+  .editor-block-list__layout
+  > .editor-block-list__insertion-point {
+  max-width: $visual-editor-max-width + (2 * $block-mover-padding-visible);
+}
+
+// Sidebar
+
+.edit-post-sidebar {
+  position: fixed;
+  z-index: z-index(".edit-post-sidebar");
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: $sidebar-width;
+  border-left: 1px solid $light-gray-500;
+  background: $light-gray-300;
+  color: $dark-gray-500;
+  height: 100vh;
+  overflow: hidden;
+
+  @include break-small() {
+    top: $admin-bar-height-big + $header-height;
+    z-index: z-index(".edit-post-sidebar {greater than small}");
+    height: auto;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @include break-medium() {
+    top: $admin-bar-height + $header-height;
+  }
+
+  > .components-panel {
+    border-left: none;
+    border-right: none;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    height: 100%;
+    margin-top: -1px;
+    margin-bottom: -1px;
+
+    @include break-small() {
+      overflow: inherit;
+      height: auto;
+    }
+  }
+
+  > .components-panel .components-panel__header {
+    position: fixed;
+    z-index: z-index(".components-panel__header");
+    top: 0;
+    left: 0;
+    right: 0;
+    height: $panel-header-height;
+
+    @include break-small() {
+      position: inherit;
+      top: auto;
+      left: auto;
+      right: auto;
+    }
+  }
+
+  p {
+    margin-top: 0;
+  }
+
+  h2,
+  h3 {
+    font-size: $default-font-size;
+    color: $dark-gray-500;
+    margin-bottom: 1.5em;
+  }
+
+  hr {
+    border-top: none;
+    border-bottom: 1px solid $light-gray-500;
+    margin: 1.5em 0;
+  }
+
+  div.components-toolbar {
+    box-shadow: none;
+    margin-bottom: 1.5em;
+  }
+
+  p + div.components-toolbar {
+    margin-top: -1em;
+  }
+}
+
+/* Visual and Text editor both */
+.edit-post-layout.is-sidebar-opened .edit-post-layout__content {
+  @include break-medium() {
+    margin-right: $sidebar-width;
+  }
+}
+
+.edit-post-layout.is-sidebar-opened {
+  .edit-post-sidebar,
+  .edit-post-plugins-panel {
+    /* Sidebar covers screen on mobile */
+    width: 100%;
+
+    /* Sidebar sits on the side on larger breakpoints */
+    @include break-medium() {
+      width: $sidebar-width;
+    }
+  }
+}
+
+/* Text Editor specific */
+.components-panel__header.edit-post-sidebar__panel-tabs {
+  justify-content: flex-start;
+  padding-left: 0;
+  padding-right: $panel-padding / 2;
+  border-top: 0;
+
+  .components-icon-button {
+    margin-left: auto;
+  }
+}
+
+.edit-post-sidebar__panel-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 15px;
+  margin-left: 0;
+  font-weight: 400;
+  @include square-style__neutral;
+
+  &.is-active {
+    border-bottom-color: $blue-medium-500;
+    font-weight: 600;
+  }
+
+  &:focus {
+    @include square-style__focus-active;
+  }
+}
+
+// Header
+.edit-post-header {
+  height: $header-height;
+  padding: $item-spacing 2px;
+  border-bottom: 1px solid $light-gray-500;
+  background: $white;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  z-index: z-index(".edit-post-header");
+  left: 0;
+  right: 0;
+
+  // mobile edgecase for toolbar
+  top: 0;
+  position: sticky;
+
+  // on mobile the main content area has to scroll
+  // otherwise you can invoke the overscroll bounce on the non-scrolling container, causing (ノಠ益ಠ)ノ彡┻━┻
+  @include break-small {
+    position: fixed;
+    padding: $item-spacing;
+    top: $admin-bar-height-big;
+  }
+
+  @include break-medium() {
+    top: $admin-bar-height;
+  }
+
+  .editor-post-switch-to-draft + .editor-post-preview,
+  .editor-post-switch-to-draft
+    + .editor-post-preview
+    + .editor-post-publish-button {
+    display: none;
+
+    @include break-small {
+      display: inline-block;
+    }
+  }
+}
+
+@include editor-left(".edit-post-header");
+
+.edit-post-header__settings {
+  display: inline-flex;
+  align-items: center;
+}
+
+.edit-post-header .components-button {
+  border-radius: $button-style__radius-roundrect;
+
+  // header toggle buttons
+  &.is-toggled {
+    color: $white;
+  }
+
+  // put the gray background on a separate layer, so as to match the size of the publish button (34px)
+  &.is-toggled::before {
+    content: "";
+    border-radius: $button-style__radius-roundrect;
+    position: absolute;
+    z-index: -1;
+    background: $dark-gray-500;
+    top: 1px;
+    right: 1px;
+    bottom: 1px;
+    left: 1px;
+  }
+
+  &.is-toggled:hover,
+  &.is-toggled:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px $dark-gray-500, inset 0 0 0 1px $white;
+    color: $white;
+    background: $dark-gray-500;
+  }
+
+  &.editor-post-switch-to-draft,
+  &.editor-post-preview,
+  &.editor-post-publish-button,
+  &.editor-post-publish-panel__toggle {
+    margin: 2px;
+    height: 33px;
+    line-height: 32px;
+    padding: 0 5px 2px;
+    font-size: $default-font-size;
+
+    @include break-small() {
+      padding: 0 12px 2px;
+    }
+  }
+
+  @include break-medium() {
+    &.editor-post-preview {
+      margin: 0 3px 0 12px;
+    }
+
+    &.editor-post-publish-button,
+    &.editor-post-publish-panel__toggle {
+      margin: 0 12px 0 3px;
+    }
+  }
+}
+
+// Header Toolbar
+
+// hide all action buttons except the inserter on mobile
+.edit-post-header-toolbar > .components-button {
+  display: none;
+
+  @include break-small() {
+    display: inline-flex;
+  }
+}
+
+.edit-post-header-toolbar {
+  display: inline-flex;
+  align-items: center;
+
+  .editor-block-switcher .components-toolbar {
+    border: none;
+  }
+}
+
+.edit-post-header-toolbar__block-toolbar {
+  // stacked toolbar
+  position: absolute;
+  top: $header-height;
+  left: 0;
+  right: 0;
+  background: $white;
+  border-bottom: 1px solid $light-gray-500;
+  min-height: $block-toolbar-height;
+
+  .is-sidebar-opened & {
+    display: none;
+  }
+
+  @include break-medium {
+    .is-sidebar-opened & {
+      display: block;
+      right: $sidebar-width;
+    }
+  }
+
+  // merge toolbars after this breakpoint
+  @include break-large {
+    // we should try and lower this breakpoint through an ellipsis overflow feature
+    padding-left: $item-spacing;
+    position: static;
+    left: auto;
+    right: auto;
+    background: none;
+    border-bottom: none;
+    min-height: auto;
+
+    .is-sidebar-opened & {
+      right: auto;
+    }
+  }
+}
+
+.edit-post-header-toolbar .table-of-contents {
+  display: none;
+
+  .is-sidebar-opened & {
+    right: $sidebar-width + 16px;
+  }
+
+  @include break-small() {
+    display: block;
+  }
+}
