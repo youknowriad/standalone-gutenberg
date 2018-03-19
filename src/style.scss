@@ -54,6 +54,13 @@ $admin-bar-height-big: 0;
 }
 
 body {
+  color: #444;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  line-height: 1.4em;
+  min-width: 600px;
+
   background: $white;
 
   .a11y-speak-region {
@@ -696,4 +703,34 @@ body {
   @include break-small() {
     display: block;
   }
+}
+
+// Block Inspector controls
+.edit-post-block-inspector-panel .components-panel__body {
+  border: none;
+  margin: 0 -16px;
+
+  .components-base-control {
+    margin: 0 0 1em 0;
+  }
+
+  .components-panel__body-toggle {
+    color: $dark-gray-500;
+  }
+}
+
+// Other
+
+.screen-reader-text {
+  border: 0;
+  clip: rect(1px, 1px, 1px, 1px);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  word-wrap: normal !important; /* many screen reader and browser combinations announce broken words as they would appear visually */
 }
