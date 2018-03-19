@@ -46,7 +46,8 @@ const wpDependencies = [
   "utils",
   "date",
   "data",
-  "editor"
+  "editor",
+  "viewport"
 ];
 const alias = {
   "original-moment": path.resolve(__dirname, "node_modules/moment"),
@@ -78,10 +79,11 @@ const config = {
       },
       {
         test: /\.js$/,
-        include: [
-          path.resolve(__dirname, "node_modules/gutenberg"),
-          path.resolve(__dirname, "src")
-        ],
+        include: wpDependencies
+          .map(dependency =>
+            path.resolve(__dirname, "node_modules/gutenberg", dependency)
+          )
+          .concat([path.resolve(__dirname, "src")]),
         use: "babel-loader"
       },
       {

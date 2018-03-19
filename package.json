@@ -29,5 +29,7 @@
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.0.0"
   },
-  "browserslist": ["extends @wordpress/browserslist-config"]
+  "browserslist": [
+    "extends @wordpress/browserslist-config"
+  ]
 }
